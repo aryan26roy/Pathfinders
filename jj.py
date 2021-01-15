@@ -1,10 +1,10 @@
-import build.DFS
+import build.dijkstra
 import awkward as ak
 arr = [[4,4,0,4,4,4],
     [4,4,0,1,4,4],
     [4,4,0,4,4,4],
     [4,4,4,4,2,4]]
-a = build.DFS.DFS_FIND(arr)
+a = build.dijkstra.interface(arr)
 form = list(a.keys())[-1]
 print(form)
 a.pop(form)
