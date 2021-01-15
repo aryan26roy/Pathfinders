@@ -4,12 +4,12 @@
 #include <vector>
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
-#define infinity 9999
-#include <algorithm>
 #include <pybind11/stl.h>
+#include <algorithm>
 
-namespace py = pybind11;
 using namespace std;
+namespace py = pybind11;
+//Class for storing node info temporarily
 
 class CT{	
 public:
@@ -26,8 +26,9 @@ struct output{
 	};
 	
 typedef struct output Struct;
+//implementation of the breadth first search algorithm for pathfinding
 
-Struct DJK(vector<vector<int>> grid,  int N, int M){
+Struct BFS(vector<vector<int>> grid,  int N, int M){
 Struct s;
 int distgrid[N][M];//for storing the distance of each node from the source
 CT source(0,0,0);//the source
@@ -39,14 +40,12 @@ for (int i = 0; i< N; i++){
 	if (grid[i][j] == 0){		//marking the obstacles as visited 
 		visited[i][j] = true;
 		distgrid[i][j] = 1000;}
-	else{
+	else
 		visited[i][j] = false;
-		distgrid[i][j] = infinity;}
 	if(grid[i][j] == 1) //storing the source and destination in the class instances
 	{
 	source.row = i;
 	source.col = j;
-	//visited[i][j] = true;
 	}
 	if(grid[i][j] == 2)
 	{
@@ -65,25 +64,25 @@ while(!q.empty()){
 	CT p = q.front();
 	q.pop();
         if (p.row - 1 >= 0 && visited[p.row - 1][p.col] == false) { 
-        if(p.dist+1 < distgrid[p.row-1][p.col]){
             q.push(CT(p.row - 1, p.col, p.dist + 1)); 	//pushing the adjacent node to the queue
+            visited[p.row - 1][p.col] = true;			//marking it visited
             distgrid[p.row - 1][p.col] = p.dist + 1; 	//incrementing the distance by one and storing it in the distgrid
-        } }
+        } 
         if (p.row + 1 < N && visited[p.row + 1][p.col] == false) { 
-        if(p.dist+1 < distgrid[p.row+1][p.col]){
             q.push(CT(p.row + 1, p.col, p.dist + 1)); 
+            visited[p.row + 1][p.col] = true;
             distgrid[p.row + 1][p.col] = p.dist + 1;  
-        } }
+        } 
         if (p.col - 1 >= 0 && visited[p.row][p.col - 1] == false) { 
-        if(p.dist+1 < distgrid[p.row][p.col-1]){
             q.push(CT(p.row, p.col - 1, p.dist + 1)); 
+            visited[p.row][p.col - 1] = true; 
             distgrid[p.row][p.col - 1] = p.dist + 1; 
-        } }
+        } 
         if (p.col + 1 < M && visited[p.row][p.col + 1] == false) { 
-        if(p.dist+1 < distgrid[p.row][p.col+1]){
             q.push(CT(p.row, p.col + 1, p.dist + 1)); 
+            visited[p.row][p.col + 1] = true; 
             distgrid[p.row][p.col+1] = p.dist + 1; 
-        } }
+        } 
 }
 
 int srow = dest.row;	
@@ -123,7 +122,27 @@ s.cols = path_col;
 return s;
 }
 
-std::map<std::string, py::array_t<int>>interface(py::array_t<int> xs) {
+//int main() 
+//{   int N = 4;
+    //int M = 4; 	
+    //vector<vector<char>> grid = { { '0', '*', '0', '1' }, 
+      //                  	   { '*', 'd', '*', '*' }, 
+        //                	   { '0', '*', '*', '*' }, 
+         //               	   { '*', '*', '*', '*' } }; 
+    //Struct out;  
+    //out = BFS(grid, N, M); 
+    //for (int i = 0; i<out.rows.size(); i++){
+	//cout<<"{"<<out.rows[i]<<","<<out.cols[i]<<"}"<< "  ";
+//}
+    //cout<<endl;
+    //out = DFS(grid, N, M);
+    ///for (int i = 0; i<out.rows.size(); i++){
+	//cout<<"{"<<out.rows[i]<<","<<out.cols[i]<<"}"<< "  ";
+//}
+    //return 0; 
+//} 
+
+std::map<std::string, py::array_t<int>>BFS_CPP(py::array_t<int> xs) {
 
 	 py::buffer_info info = xs.request(); 	//requesting buffer information of the input
     auto ptr = static_cast<int *>(info.ptr);	//pointer to the initial value
@@ -150,7 +169,7 @@ std::map<std::string, py::array_t<int>>interface(py::array_t<int> xs) {
         grid.push_back(too); 
     } 
     Struct out;  
-    out = DJK(grid, dims[0], dims[1]); 
+    out = BFS(grid, dims[0], dims[1]); 
 int jk = out.rows.size();
 auto x = py::array(py::buffer_info(
         nullptr,            // Pointer to data
@@ -250,10 +269,6 @@ ptr3[idx] = jk;
   return m;
 }
 
-
-PYBIND11_MODULE(dijkstra, m) {
-  // Ensure dependencies are loaded.
-  //py::module::import("awkward");
-
-  m.def("interface", &interface);
+PYBIND11_MODULE(BFS, m) {	//pybind11 declaration
+    m.def("BFS_FIND", &BFS_CPP);
 }

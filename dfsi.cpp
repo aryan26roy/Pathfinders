@@ -4,14 +4,13 @@
 #include <vector>
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
-#define infinity 9999
-#include <algorithm>
 #include <pybind11/stl.h>
-
-namespace py = pybind11;
+#include <algorithm>
 using namespace std;
+namespace py = pybind11;
+//Class for storing node info temporarily
 
-class CT{	
+class CT{
 public:
 	int row;
 	int col;
@@ -26,78 +25,78 @@ struct output{
 	};
 	
 typedef struct output Struct;
+//implementation of the depth first search algorithm for pathfinding
 
-Struct DJK(vector<vector<int>> grid,  int N, int M){
+Struct DFS(vector<vector<int>> grid,  int N, int M){
 Struct s;
 int distgrid[N][M];//for storing the distance of each node from the source
 CT source(0,0,0);//the source
 CT dest(0,0,0);//the destination
 bool visited[N][M];
 
-for (int i = 0; i< N; i++){	
+for (int i = 0; i< N; i++){
 	for(int j = 0; j < M; j++){
-	if (grid[i][j] == 0){		//marking the obstacles as visited 
+	if (grid[i][j] == 0){	//marking the obstacles as visited
 		visited[i][j] = true;
 		distgrid[i][j] = 1000;}
-	else{
+	else
 		visited[i][j] = false;
-		distgrid[i][j] = infinity;}
-	if(grid[i][j] == 1) //storing the source and destination in the class instances
+	if(grid[i][j] == 1)	//storing the source and destination in the class instances
 	{
 	source.row = i;
 	source.col = j;
-	//visited[i][j] = true;
 	}
 	if(grid[i][j] == 2)
 	{
 	dest.row = i;
 	dest.col = j;
-	}	
+	}
+	
 }	
 }
 
-queue<CT> q;	//queue for breadth first search
+stack<CT> q;	//queue for breadth first search
 q.push(source);
 distgrid[source.row][source.col] = 0;
-visited[source.row][source.col] = true; //marking the source as visited
+visited[source.row][source.col] = true;
 
-while(!q.empty()){
-	CT p = q.front();
+while(!q.empty()){	//marking the source as visited
+	CT p = q.top();
 	q.pop();
         if (p.row - 1 >= 0 && visited[p.row - 1][p.col] == false) { 
-        if(p.dist+1 < distgrid[p.row-1][p.col]){
             q.push(CT(p.row - 1, p.col, p.dist + 1)); 	//pushing the adjacent node to the queue
-            distgrid[p.row - 1][p.col] = p.dist + 1; 	//incrementing the distance by one and storing it in the distgrid
-        } }
+            visited[p.row - 1][p.col] = true;			//marking it visited
+            distgrid[p.row - 1][p.col] = p.dist + 1;		//incrementing the distance by one and storing it in the distgrid 
+        } 
         if (p.row + 1 < N && visited[p.row + 1][p.col] == false) { 
-        if(p.dist+1 < distgrid[p.row+1][p.col]){
             q.push(CT(p.row + 1, p.col, p.dist + 1)); 
+            visited[p.row + 1][p.col] = true;
             distgrid[p.row + 1][p.col] = p.dist + 1;  
-        } }
+        } 
         if (p.col - 1 >= 0 && visited[p.row][p.col - 1] == false) { 
-        if(p.dist+1 < distgrid[p.row][p.col-1]){
             q.push(CT(p.row, p.col - 1, p.dist + 1)); 
+            visited[p.row][p.col - 1] = true; 
             distgrid[p.row][p.col - 1] = p.dist + 1; 
-        } }
+        } 
         if (p.col + 1 < M && visited[p.row][p.col + 1] == false) { 
-        if(p.dist+1 < distgrid[p.row][p.col+1]){
             q.push(CT(p.row, p.col + 1, p.dist + 1)); 
+            visited[p.row][p.col + 1] = true; 
             distgrid[p.row][p.col+1] = p.dist + 1; 
-        } }
+        } 
 }
 
-int srow = dest.row;	
+int srow = dest.row;
 int scol = dest.col;
 vector <int> path_col;	//output vector for the column values of the path  
-vector <int> path_row; //output vector for the row values of the path
-path_row.push_back(srow); //starting the path from the source
+vector <int> path_row;	//output vector for the row values of the path
+path_row.push_back(srow);	//starting the path from the source
 path_col.push_back(scol);
 
-while (srow != source.row || scol != source.col){ //working back from the destination to the source as each node had a weight of 1
+while (srow != source.row || scol != source.col){	//working back from the destination to the source as each node had a weight of 1
 	if (distgrid[srow+1][scol] == distgrid[srow][scol]-1){
 	srow = srow+1;
 	scol = scol;
-	path_row.push_back(srow); //adding the column and row values to the vectors
+	path_row.push_back(srow);	//adding the column and row values to the vectors
 	path_col.push_back(scol);
 	continue;}
 	if (distgrid[srow][scol+1] == distgrid[srow][scol]-1){
@@ -123,7 +122,8 @@ s.cols = path_col;
 return s;
 }
 
-std::map<std::string, py::array_t<int>>interface(py::array_t<int> xs) {
+
+std::map<std::string, py::array_t<int>>DFSI(py::array_t<int> xs) {
 
 	 py::buffer_info info = xs.request(); 	//requesting buffer information of the input
     auto ptr = static_cast<int *>(info.ptr);	//pointer to the initial value
@@ -150,7 +150,7 @@ std::map<std::string, py::array_t<int>>interface(py::array_t<int> xs) {
         grid.push_back(too); 
     } 
     Struct out;  
-    out = DJK(grid, dims[0], dims[1]); 
+    out = DFS(grid, dims[0], dims[1]); 
 int jk = out.rows.size();
 auto x = py::array(py::buffer_info(
         nullptr,            // Pointer to data
@@ -251,9 +251,6 @@ ptr3[idx] = jk;
 }
 
 
-PYBIND11_MODULE(dijkstra, m) {
-  // Ensure dependencies are loaded.
-  //py::module::import("awkward");
-
-  m.def("interface", &interface);
+PYBIND11_MODULE(DFS, m) {	//pybind11 declaration
+    m.def("DFS_FIND", &DFSI);
 }
