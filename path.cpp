@@ -125,17 +125,19 @@ return s;
 
 std::map<std::string, py::array_t<int>>interface(py::array_t<int> xs) {
 
-	 py::buffer_info info = xs.request(); 	//requesting buffer information of the input
+	py::buffer_info info = xs.request(); 	//requesting buffer information of the input
     auto ptr = static_cast<int *>(info.ptr);	//pointer to the initial value
     vector<int> dims;				//the dimensions of the input array
     int n = 1;
+    vector<vector<int>> grid = {{1,2,3},{1,2,3}};
+    grid.clear();
+    vector <int> too; 
+
     for (auto r: info.shape) {
       dims.push_back(r);
       n *= r;					//total number of elements
     }
-    vector<vector<int>> grid = {{1,2,3},{1,2,3}};
-    grid.clear();
-    vector <int> too;      
+       
     for (int i = 0; i < dims[0]; i++) { 
         // Vector to store column elements 
         vector <int> too; 
@@ -149,70 +151,36 @@ std::map<std::string, py::array_t<int>>interface(py::array_t<int> xs) {
         // to create the 2D vector 
         grid.push_back(too); 
     } 
+
     Struct out;  
-    out = DJK(grid, dims[0], dims[1]); 
-int jk = out.rows.size();
-auto x = py::array(py::buffer_info(
-        nullptr,            // Pointer to data
-        sizeof(int),     // Size of one item 
-        py::format_descriptor<int>::value, // Buffer format 
-        1,          // number of dimensions? 
-        {jk},  // Number of elements for each dimension 
-        {sizeof(int) }  // Strides for each dimension
-        ));
-auto y = py::array(py::buffer_info(
-        nullptr,            // Pointer to data
-        sizeof(int),     // Size of one item 
-        py::format_descriptor<int>::value, // Buffer format 
-        1,          // number of dimensions? 
-        {jk},  // Number of elements for each dimension 
-        {sizeof(int) }  // Strides for each dimension
-        ));
-auto offset = py::array(py::buffer_info(
-        nullptr,            // Pointer to data
-        sizeof(int),     // Size of one item 
-        py::format_descriptor<int>::value, // Buffer format 
-        1,          // number of dimensions? 
-        {2},  // Number of elements for each dimension 
-        {sizeof(int) }  // Strides for each dimension
-        ));
-auto length = py::array(py::buffer_info(
-        nullptr,            // Pointer to data
-        sizeof(int),     // Size of one item 
-        py::format_descriptor<int>::value, // Buffer format 
-        1,          // number of dimensions? 
-        {1},  // Number of elements for each dimension 
-        {sizeof(int) }  // Strides for each dimension
-        ));
-auto form = py::array(py::buffer_info(
-        nullptr,            // Pointer to data
-        sizeof(int),     // Size of one item 
-        py::format_descriptor<int>::value, // Buffer format 
-        1,          // number of dimensions? 
-        {1},  // Number of elements for each dimension 
-        {sizeof(int) }  // Strides for each dimension
-        ));
-auto buf3 = offset.request();
-    int *ptr3 = (int *) buf3.ptr;
-auto buf = x.request();
+    out = DJK(grid, dims[0], dims[1]); //getting the output from the pathfinding algorithm
+
+    int jk = out.rows.size();
+    auto x = py::array(py::buffer_info(nullptr, sizeof(int), py::format_descriptor<int>::value,1,{jk},{sizeof(int) } ));    
+    auto y = py::array(py::buffer_info(nullptr, sizeof(int), py::format_descriptor<int>::value, 1, {jk}, {sizeof(int) } ));
+    auto length = py::array(py::buffer_info(nullptr, sizeof(int), py::format_descriptor<int>::value, 1, {1}, {sizeof(int) }  )); 
+    auto form = py::array(py::buffer_info(nullptr, sizeof(int), py::format_descriptor<int>::value, 1, {1}, {sizeof(int) }  ));  
+
+    
+    auto buf = x.request();
     int *ptr1 = (int *) buf.ptr;
-auto buf2 = y.request();
+    auto buf2 = y.request();
     int *ptr2 = (int *) buf2.ptr;
-auto buf4 = length.request();
+    auto buf4 = length.request();
     int *ptr4 = (int *) buf4.ptr;
-auto buf5 = form.request();
+    auto buf5 = form.request();
     int *ptr5 = (int *) buf5.ptr;
-size_t idx = 0;
-for (int i = 0; i < out.rows.size(); i++){
-ptr1[idx] = out.rows[i];
-ptr2[idx] = out.cols[i];
-        idx++;}
-idx = 0;
-ptr3[idx] = 0;
-ptr4[idx] = jk;
-ptr5[idx] = 0;
-idx++;
-ptr3[idx] = jk;
+    size_t idx = 0;
+    for (int i = 0; i < out.rows.size(); i++){
+        ptr1[idx] = out.rows[i];
+        ptr2[idx] = out.cols[i];
+        idx++;
+        }
+
+    idx = 0;
+    ptr4[idx] = jk;
+    ptr5[idx] = 0;
+    idx++;
 
   
   //for (int i = 0 ; i<out.rows.size(); i++){
@@ -245,15 +213,13 @@ ptr3[idx] = jk;
     },
     "form_key": "node0"
 })";
-  std::map<std::string, py::array_t<int>> m{{str,form},{"Length",length},{"part0-node1-data", x}, {"part0-node2-data", y}, };
+    std::map<std::string, py::array_t<int>> m{{str,form},{"Length",length},{"part0-node1-data", x}, {"part0-node2-data", y}, };
 
-  return m;
+return m;
 }
 
 
 PYBIND11_MODULE(dijkstra, m) {
-  // Ensure dependencies are loaded.
-  //py::module::import("awkward");
 
   m.def("interface", &interface);
 }
