@@ -7,7 +7,7 @@ A library containing pathfinding algorithms implemented and compiled in C++ and 
  cmake -S . -B build
  cmake --build build
  ```
- ## How To USe
+ ## How To Use
  To use the library simply import the wrapper class from the folder where it was built:
  ```python
  import pathfinders
@@ -63,6 +63,10 @@ For Dijkstra's Algorithm:
 ```python
 path = finder.findpath("DJK")
 ```
+## Dependencies
+The library has the following python dependencies:
+* Awkward Array
+* Numpy
 
 
 
