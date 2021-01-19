@@ -144,7 +144,7 @@ return s;
 
 std::map<std::string, py::array_t<int>>BFS_CPP(py::array_t<int> xs) {
 
-	py::buffer_info info = xs.request(); 	//requesting buffer information of the input
+    py::buffer_info info = xs.request(); 	//requesting buffer information of the input
     auto ptr = static_cast<int *>(info.ptr);	//pointer to the initial value
     vector<int> dims;				//the dimensions of the input array
     int n = 1;

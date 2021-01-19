@@ -3,17 +3,9 @@
 cmake_minimum_required(VERSION 3.1...3.16)
 project(Pathfinders LANGUAGES CXX)
 
-#execute_process(COMMAND python -m awkward.config --incdir OUTPUT_VARIABLE AWKWARD_INCLUDE OUTPUT_STRIP_TRAILING_WHITESPACE)
-#execute_process(COMMAND python -m awkward.config --libdir OUTPUT_VARIABLE AWKWARD_LIBRARIES OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-#include_directories(BEFORE "${AWKWARD_INCLUDE}")
 
 add_subdirectory(pybind11)
 
-#find_library(CPU-KERNELS awkward-cpu-kernels REQUIRED HINTS ${AWKWARD_LIBRARIES})
-#find_library(LIBAWKWARD awkward REQUIRED HINTS ${AWKWARD_LIBRARIES})
-#find_library(LIBDL dl REQUIRED)
-#message(STATUS "Libraries: ${CPU-KERNELS} ${LIBAWKWARD} ${LIBDL}")
 
 pybind11_add_module(dijkstra path.cpp)
 pybind11_add_module(DFS dfsi.cpp)
