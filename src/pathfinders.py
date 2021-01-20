@@ -1,6 +1,6 @@
-import build.DFS        # importing the compiled modules
-import build.BFS
-import build.dijkstra
+import build._dfs        # importing the compiled modules
+import build._bfs
+import build._dijkstra
 import awkward as ak
 
 
@@ -86,11 +86,11 @@ class pathfinder:       # wrapper class on python side
         if count < 2 or count > 2:
             raise ValueError
         if algo == "BFS":
-            f = build.BFS.BFS_FIND(self.grid)       # call the BFS algorithm
+            f = build._bfs.BFS_FIND(self.grid)       # call the BFS algorithm
         if algo == "DFS":
-            f = build.DFS.DFS_FIND(self.grid)       # call the DFS algorithm
+            f = build._dfs.DFS_FIND(self.grid)       # call the DFS algorithm
         if algo == "DJK":
-            f = build.dijkstra.interface(self.grid)     # call the Dijkstra Algorithm
+            f = build._dijkstra.interface(self.grid)     # call the Dijkstra Algorithm
         form1 = list(f.keys())[-1]
         f.pop(form1)
         length1 = f['Length'][0]

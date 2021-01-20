@@ -235,6 +235,6 @@ std::map<std::string, py::array_t<int>>BFS_CPP(py::array_t<int> xs) {
   return m;
 }
 
-PYBIND11_MODULE(BFS, m) {	//pybind11 declaration
+PYBIND11_MODULE(_bfs, m) {	//pybind11 declaration
     m.def("BFS_FIND", &BFS_CPP);
 }

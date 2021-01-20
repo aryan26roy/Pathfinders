@@ -219,7 +219,7 @@ return m;
 }
 
 
-PYBIND11_MODULE(dijkstra, m) {
+PYBIND11_MODULE(_dijkstra, m) {
 
   m.def("interface", &interface);
 }

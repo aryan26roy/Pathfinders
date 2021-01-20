@@ -217,6 +217,6 @@ std::map<std::string, py::array_t<int>>DFSI(py::array_t<int> xs) {
 }
 
 
-PYBIND11_MODULE(DFS, m) {	//pybind11 declaration
+PYBIND11_MODULE(_dfs, m) {	//pybind11 declaration
     m.def("DFS_FIND", &DFSI);
 }
