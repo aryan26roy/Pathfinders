@@ -1,0 +1,16 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+src/main.cpp
+src/pathfinders/Untitled.ipynb
+src/pathfinders/__init__.py
+src/pathfinders/py.typed
+src/pathfinders.egg-info/PKG-INFO
+src/pathfinders.egg-info/SOURCES.txt
+src/pathfinders.egg-info/dependency_links.txt
+src/pathfinders.egg-info/requires.txt
+src/pathfinders.egg-info/top_level.txt
+tests/test_package.py
