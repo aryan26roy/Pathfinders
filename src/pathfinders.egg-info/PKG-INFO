@@ -8,38 +8,78 @@ Author-email: aryanroy5678@gmail.com
 Maintainer: Aryan Roy
 Maintainer-email: aryanroy5678@gmail.com
 License: BSD 3-Clause License
-Description: # pathfinders
+Description: # PATHFINDERS
+        A library containing pathfinding algorithms implemented and compiled in C++ and binded and exposed to Python. It enabled fast execution of these pathfinding algorithms in Python.
+         
+         ## How To Install
+         To install the library, simply clone this repository and go to the folder where it has been cloned and type the following commands.
+         ```bash
+         cmake -S . -B build
+         cmake --build build
+         ```
+         ## How To Use
+         To use the library simply import the wrapper class from the folder where it was built:
+         ```python
+         import pathfinders
+         ```
+         Then the class can be instantiated like this:
+         ```python
+         finder = pathfinders.pathfinder()
+         ```
+         ### Inputing A Map
+         In the pathfinders library there are two ways to input a map.
+         * Rasterized Form
+         * Obstacles form
         
-        [![Actions Status][actions-badge]][actions-link]
-        [![Documentation Status][rtd-badge]][rtd-link]
-        [![Code style: black][black-badge]][black-link]
+        To input the map in the rasterized form, assuming the map is in 2-Dimensional form in the variable map:
+        ```python
+        finder.mapras(map)
+        ```
+        To input the map in the obstacles form, a 2D list of the coordinates of the obstacles on the map need to be provided along with the shape and the start and stop points:
+        ```python
+        finder.map(obs,dims,start,stop)
+        ```
+        ### Map Manipulation
+        The library provides two simple functions to modify the map, they are:
+        * Mark
+        * Delete
+          
+        The Mark function can be used to mark a new set of start and stop points:
+        ```python
+        finder.mark(start,stop)
+        ```
+        The delete function can be used to delete the current start and stop points on the map:
+        ```python
+        finder.delete()
+        ```
+        ### Finding The Shortest Path
+        Once the start and stop points have been set, the findpath function can be used to find the shortest path between them.
+        The function returns the path as an Awkward Record Array which enables the user to manipulate the path using the functionalities provided by [Awkward Array Library](https://github.com/scikit-hep/awkward-1.0).
+        The different algorithms provided in the library are:
+        * Breadth-First Search
+        * Depth-First Search
+        * Dijkstra's Algorithm
+        * A-Star Algorithm (To be added)
         
-        [![PyPI version][pypi-version]][pypi-link]
-        [![Conda-Forge][conda-badge]][conda-link]
-        [![PyPI platforms][pypi-platforms]][pypi-link]
+        For Breadth-First Search:
+        ```python
+        path = finder.findpath("BFS")
+        ```
+        For Depth-First Search:
+        ```python
+        path = finder.findpath("DFS")
+        ```
+        For Dijkstra's Algorithm:
+        ```python
+        path = finder.findpath("DJK")
+        ```
+        ## Dependencies
+        The library has the following python dependencies:
+        * Awkward Array
+        * Numpy
         
-        [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
-        [![Gitter][gitter-badge]][gitter-link]
         
         
-        
-        
-        [actions-badge]:            https://github.com/aryan26roy/Pathfinders/workflows/CI/badge.svg
-        [actions-link]:             https://github.com/aryan26roy/Pathfinders/actions
-        [black-badge]:              https://img.shields.io/badge/code%20style-black-000000.svg
-        [black-link]:               https://github.com/psf/black
-        [conda-badge]:              https://img.shields.io/conda/vn/conda-forge/pathfinders
-        [conda-link]:               https://github.com/conda-forge/pathfinders-feedstock
-        [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
-        [github-discussions-link]:  https://github.com/aryan26roy/Pathfinders/discussions
-        [gitter-badge]:             https://badges.gitter.im/https://github.com/aryan26roy/Pathfinders/community.svg
-        [gitter-link]:              https://gitter.im/https://github.com/aryan26roy/Pathfinders/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-        [pypi-link]:                https://pypi.org/project/pathfinders/
-        [pypi-platforms]:           https://img.shields.io/pypi/pyversions/pathfinders
-        [pypi-version]:             https://badge.fury.io/py/pathfinders.svg
-        [rtd-badge]:                https://readthedocs.org/projects/pathfinders/badge/?version=latest
-        [rtd-link]:                 https://pathfinders.readthedocs.io/en/latest/?badge=latest
-        [sk-badge]:                 https://scikit-hep.org/assets/images/Scikit--HEP-Project-blue.svg
         
 Platform: Any
 Classifier: Topic :: Scientific/Engineering

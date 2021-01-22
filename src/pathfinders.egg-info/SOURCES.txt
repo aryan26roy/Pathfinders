@@ -13,5 +13,4 @@ src/pathfinders.egg-info/SOURCES.txt
 src/pathfinders.egg-info/dependency_links.txt
 src/pathfinders.egg-info/requires.txt
 src/pathfinders.egg-info/top_level.txt
-src/pathfinders/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 tests/test_package.py

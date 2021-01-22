@@ -4,11 +4,10 @@ A library containing pathfinding algorithms implemented and compiled in C++ and 
  ## How To Install
  To install the library, simply clone this repository and go to the folder where it has been cloned and type the following commands.
  ```bash
- cmake -S . -B build
- cmake --build build
+ pip3 install .
  ```
  ## How To Use
- To use the library simply import the wrapper class from the folder where it was built:
+ To use the library simply import library as such
  ```python
  import pathfinders
  ```
