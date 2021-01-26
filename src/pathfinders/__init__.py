@@ -9,14 +9,11 @@ class pathfinder:       # wrapper class on python side
     def map(self, obs, dims, start, stop):
         for elem in obs:
             if elem[0] > dims[0] or elem[1] > dims[1]:
-                print("Obstacle Outside Map")
-                raise ValueError
+                raise ValueError("Obstacle Outside Map")
         if start[0] > dims[0] or start[1] > dims[1] or stop[0] > dims[0] or stop[1] > dims[1]:
-            print("Start/Stop Outside Map")
-            raise ValueError
+            raise ValueError("Start/Stop Outside Map")
         if start in obs or stop in obs:
-            print("Can't mark obstacles")
-            raise ValueError
+            raise ValueError("Can't mark obstacles")
         grid = []
         for i in range(dims[0]):
             aee = []
@@ -36,21 +33,21 @@ class pathfinder:       # wrapper class on python side
         for elem in grid:
             print(elem)
         self.grid = grid
+        self.rows = len(grid)
+        self.cols = len(grid[0])
 
     def mapras(self, grid):
         lg = len(grid[0])
         for elem in grid:
             if len(elem) != lg:
-                print("Dimension Mismatch")
-                raise ValueError
+                raise ValueError("Dimension Mismatch")
         self.grid = grid        # the map
         self.rows = len(grid)       # metadata of the map
         self.cols = len(grid[0])
 
     def mark(self, start, stop):        # function to mark the start and stop point on the map
         if start[0] > self.rows or start[1] > self.cols or start[0] > self.rows or start[1] > self.cols:
-            print("Start/Stop outside the map")
-            raise ValueError
+            raise ValueError("Start/Stop outside the map")
         count = 0
         for elem in self.grid:      # raise exception if there is no start/stop
             if 1 in elem:
@@ -58,9 +55,9 @@ class pathfinder:       # wrapper class on python side
             if 2 in elem:
                 count += 1
         if count == 2:
-            	raise ValueError
+            	raise ValueError("Start/Stop already exists")
         if self.grid[start[0]][start[1]] == 0 or self.grid[stop[0]][stop[1]] == 0:
-            return print("Error: Cannot Mark Obstacles")
+            raise ValueError("Error: Cannot Mark Obstacles")
         for i in range(self.rows):
     	    for j in range(self.cols):
     	        if i == start[0] and j == start[1]:
@@ -85,7 +82,7 @@ class pathfinder:       # wrapper class on python side
             if 2 in elem:
             	count += 1
         if count < 2 or count > 2:
-            raise ValueError
+            raise ValueError("No Start/Stop")
         if algo == "BFS":
             f = _core.BFS_FIND(self.grid)       # call the BFS algorithm
         if algo == "DFS":
