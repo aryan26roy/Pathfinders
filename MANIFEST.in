@@ -3,5 +3,6 @@ graft src
 graft tests
 recursive-include pybind11/include/pybind11 *
 recursive-include pybind11/tools 
+recursive-include pybind11 * 
 include LICENSE README.md pyproject.toml setup.py setup.cfg
 global-exclude __pycache__ *.py[cod] .*
